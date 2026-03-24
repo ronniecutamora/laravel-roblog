@@ -364,8 +364,10 @@ Server-side patterns (Inertia::render, props, middleware) are covered in inertia
 
 ## Common Pitfalls
 
-- Using traditional `<a>` links instead of Inertia's `<Link>` component (breaks SPA behavior)
+- **NEVER use `<wa-button href="...">`** for navigation — the `href` renders a native `<a>` inside Shadow DOM which Inertia cannot intercept, causing full page reloads instead of SPA navigation. Use `<wa-button onclick={() => router.visit('/path')}>` instead.
+- Using traditional `<a>` links instead of `<a href="/path" use:inertia>` or `router.visit()` (breaks SPA behavior)
+- **Boolean attributes on web components** like `loading`, `open`, `disabled` must use `|| undefined` (e.g. `loading={$form.processing || undefined}`) because `="false"` is still truthy in HTML
 - Forgetting to add loading states (skeleton screens) when using deferred props
 - Not handling the `undefined` state of deferred props before data loads
-- Using `<form>` without preventing default submission (use `<Form>` component or `on:submit|preventDefault`)
-- Forgetting to check if `<Form>` component is available in your Inertia version
+- Using `<form>` without preventing default submission (use `onsubmit` with `e.preventDefault()`)
+- Using Svelte 4 syntax (`export let`, `on:submit|preventDefault`) instead of Svelte 5 (`let { prop } = $props()`, `onsubmit`)

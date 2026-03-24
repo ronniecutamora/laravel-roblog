@@ -1,7 +1,5 @@
 <script>
-    import { useForm } from '@inertiajs/svelte';
-
-    let { errors = {} } = $props();
+    import { useForm, inertia } from '@inertiajs/svelte';
 
     const form = useForm({
         name: '',
@@ -16,85 +14,114 @@
     }
 </script>
 
-<main>
-    <div class="auth-card">
-        <h1>Register</h1>
+<section class="auth-page">
+    <div class="auth-container">
+        <wa-card class="auth-card">
+            <div class="auth-header">
+                <wa-icon name="user-plus" library="fa" class="auth-icon"></wa-icon>
+                <h1>Create Account</h1>
+                <p class="auth-subtitle">Sign up to get started</p>
+            </div>
 
-        <form onsubmit={submit}>
-            <label>
-                Name
-                <input type="text" bind:value={$form.name} required />
-                {#if $form.errors.name}<span class="error">{$form.errors.name}</span>{/if}
-            </label>
+            <form onsubmit={submit} class="auth-form">
+                <div class="field">
+                    <wa-input
+                        label="Name"
+                        type="text"
+                        value={$form.name}
+                        oninput={(e) => $form.name = e.target.value}
+                        required
+                    >
+                        <wa-icon name="user" library="fa" slot="prefix"></wa-icon>
+                    </wa-input>
+                    {#if $form.errors.name}
+                        <p class="field-error">
+                            <wa-icon name="circle-exclamation" library="fa"></wa-icon>
+                            {$form.errors.name}
+                        </p>
+                    {/if}
+                </div>
 
-            <label>
-                Email
-                <input type="email" bind:value={$form.email} required />
-                {#if $form.errors.email}<span class="error">{$form.errors.email}</span>{/if}
-            </label>
+                <div class="field">
+                    <wa-input
+                        label="Email"
+                        type="email"
+                        value={$form.email}
+                        oninput={(e) => $form.email = e.target.value}
+                        required
+                    >
+                        <wa-icon name="envelope" library="fa" slot="prefix"></wa-icon>
+                    </wa-input>
+                    {#if $form.errors.email}
+                        <p class="field-error">
+                            <wa-icon name="circle-exclamation" library="fa"></wa-icon>
+                            {$form.errors.email}
+                        </p>
+                    {/if}
+                </div>
 
-            <label>
-                Password
-                <input type="password" bind:value={$form.password} required />
-                {#if $form.errors.password}<span class="error">{$form.errors.password}</span>{/if}
-            </label>
+                <div class="field">
+                    <wa-input
+                        label="Password"
+                        type="password"
+                        password-toggle
+                        value={$form.password}
+                        oninput={(e) => $form.password = e.target.value}
+                        required
+                    >
+                        <wa-icon name="lock" library="fa" slot="prefix"></wa-icon>
+                    </wa-input>
+                    {#if $form.errors.password}
+                        <p class="field-error">
+                            <wa-icon name="circle-exclamation" library="fa"></wa-icon>
+                            {$form.errors.password}
+                        </p>
+                    {/if}
+                </div>
 
-            <label>
-                Confirm Password
-                <input type="password" bind:value={$form.password_confirmation} required />
-            </label>
+                <div class="field">
+                    <wa-input
+                        label="Confirm Password"
+                        type="password"
+                        password-toggle
+                        value={$form.password_confirmation}
+                        oninput={(e) => $form.password_confirmation = e.target.value}
+                        required
+                    >
+                        <wa-icon name="lock" library="fa" slot="prefix"></wa-icon>
+                    </wa-input>
+                </div>
 
-            <button type="submit" disabled={$form.processing}>
-                {$form.processing ? 'Registering...' : 'Register'}
-            </button>
-        </form>
+                <wa-button
+                    variant="brand"
+                    type="submit"
+                    loading={$form.processing || null}
+                    style="width: 100%;"
+                >
+                    <wa-icon name="user-plus" library="fa" slot="prefix"></wa-icon>
+                    Create Account
+                </wa-button>
+            </form>
 
-        <p class="link">Already have an account? <a href="/login">Login</a></p>
+            <p class="auth-footer">
+                Already have an account?
+                <a href="/login" use:inertia>Login</a>
+            </p>
+        </wa-card>
     </div>
-</main>
+</section>
 
 <style>
-    main {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        font-family: system-ui, sans-serif;
-        background: #f5f5f5;
+    h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-text);
+        margin-bottom: 0.25rem;
     }
-    .auth-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 400px;
+
+    @media (min-width: 640px) {
+        h1 {
+            font-size: 1.75rem;
+        }
     }
-    h1 { text-align: center; margin-bottom: 1.5rem; color: #333; }
-    label { display: block; margin-bottom: 1rem; color: #555; }
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-        display: block;
-        width: 100%;
-        padding: 0.5rem;
-        margin-top: 0.25rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-    button {
-        width: 100%;
-        padding: 0.75rem;
-        background: #333;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-    }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .error { color: #e53e3e; font-size: 0.85rem; }
-    .link { text-align: center; margin-top: 1rem; }
-    .link a { color: #333; }
 </style>

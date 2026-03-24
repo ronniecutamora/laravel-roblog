@@ -1,5 +1,5 @@
 <script>
-    import { useForm } from '@inertiajs/svelte';
+    import { useForm, inertia } from '@inertiajs/svelte';
 
     let { errors = {} } = $props();
 
@@ -15,82 +15,85 @@
     }
 </script>
 
-<main>
-    <div class="auth-card">
-        <h1>Login</h1>
+<section class="auth-page">
+    <div class="auth-container">
+        <wa-card class="auth-card">
+            <div class="auth-header">
+                <wa-icon name="right-to-bracket" library="fa" class="auth-icon"></wa-icon>
+                <h1>Welcome Back</h1>
+                <p class="auth-subtitle">Sign in to your account</p>
+            </div>
 
-        {#if errors.email}
-            <p class="error">{errors.email}</p>
-        {/if}
+            {#if errors.email}
+                <wa-callout variant="danger" open>
+                    <wa-icon name="circle-exclamation" library="fa" slot="icon"></wa-icon>
+                    {errors.email}
+                </wa-callout>
+            {/if}
 
-        <form onsubmit={submit}>
-            <label>
-                Email
-                <input type="email" bind:value={$form.email} required />
-            </label>
+            <form onsubmit={submit} class="auth-form">
+                <wa-input
+                    label="Email"
+                    type="email"
+                    value={$form.email}
+                    oninput={(e) => $form.email = e.target.value}
+                    required
+                >
+                    <wa-icon name="envelope" library="fa" slot="prefix"></wa-icon>
+                </wa-input>
 
-            <label>
-                Password
-                <input type="password" bind:value={$form.password} required />
-            </label>
+                <wa-input
+                    label="Password"
+                    type="password"
+                    password-toggle
+                    value={$form.password}
+                    oninput={(e) => $form.password = e.target.value}
+                    required
+                >
+                    <wa-icon name="lock" library="fa" slot="prefix"></wa-icon>
+                </wa-input>
 
-            <label class="checkbox">
-                <input type="checkbox" bind:checked={$form.remember} />
-                Remember me
-            </label>
+                <wa-checkbox
+                    checked={$form.remember}
+                    onchange={(e) => $form.remember = e.target.checked}
+                >
+                    Remember me
+                </wa-checkbox>
 
-            <button type="submit" disabled={$form.processing}>
-                {$form.processing ? 'Logging in...' : 'Login'}
-            </button>
-        </form>
+                <wa-button
+                    variant="brand"
+                    type="submit"
+                    loading={$form.processing || null}
+                    style="width: 100%;"
+                >
+                    <wa-icon name="right-to-bracket" library="fa" slot="prefix"></wa-icon>
+                    Login
+                </wa-button>
+            </form>
 
-        <p class="link">Don't have an account? <a href="/register">Register</a></p>
+            <p class="auth-footer">
+                Don't have an account?
+                <a href="/register" use:inertia>Register</a>
+            </p>
+        </wa-card>
     </div>
-</main>
+</section>
 
 <style>
-    main {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        font-family: system-ui, sans-serif;
-        background: #f5f5f5;
+    h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-text);
+        margin-bottom: 0.25rem;
     }
-    .auth-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        width: 100%;
-        max-width: 400px;
+
+    wa-callout {
+        margin: 1rem 1.5rem 0;
     }
-    h1 { text-align: center; margin-bottom: 1.5rem; color: #333; }
-    label { display: block; margin-bottom: 1rem; color: #555; }
-    input[type="email"],
-    input[type="password"] {
-        display: block;
-        width: 100%;
-        padding: 0.5rem;
-        margin-top: 0.25rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-sizing: border-box;
+
+    @media (min-width: 640px) {
+        h1 {
+            font-size: 1.75rem;
+        }
     }
-    .checkbox { display: flex; align-items: center; gap: 0.5rem; }
-    .checkbox input { width: auto; }
-    button {
-        width: 100%;
-        padding: 0.75rem;
-        background: #333;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-    }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .error { color: #e53e3e; text-align: center; }
-    .link { text-align: center; margin-top: 1rem; }
-    .link a { color: #333; }
 </style>

@@ -2,13 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\PostController;
 
-Route::get('/', function () {
-    // 'Home' maps to resources/js/Pages/Home.svelte
-    // The array becomes the component's $props()
+//Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+Route::get('/', [PostController::class, 'index'])->name('posts.index');
+
+Route::get('/wa-practice', function() {
     return Inertia::render(
-        'Home', [
-            'greeting' => 'Hello from Laravel + Svelte!',
-        ]
+        'Wapractice'
     );
 });
+
+require __DIR__.'/posts.php';
