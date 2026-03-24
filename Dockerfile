@@ -1,5 +1,8 @@
 FROM dunglas/frankenphp:php8.4-bookworm
 
+# Install system dependencies
+RUN apt-get update && apt-get install -y git unzip zip && rm -rf /var/lib/apt/lists/*
+
 # Install PHP extensions
 RUN install-php-extensions \
     pdo_pgsql \
